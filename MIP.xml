@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MudletPackage>
+<MudletPackage version="1.0">
+    <TriggerPackage>
+        <TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+            <name>MIP</name>
+            <script></script>
+            <triggerType>0</triggerType>
+            <conditonLineDelta>0</conditonLineDelta>
+            <mStayOpen>0</mStayOpen>
+            <mCommand></mCommand>
+            <packageName></packageName>
+            <mFgColor>#ff0000</mFgColor>
+            <mBgColor>#ffff00</mBgColor>
+            <mSoundFile></mSoundFile>
+            <colorTriggerFgColor>#000000</colorTriggerFgColor>
+            <colorTriggerBgColor>#000000</colorTriggerBgColor>
+            <regexCodeList/>
+            <regexCodePropertyList/>
+            <Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+                <name>MIP Capture</name>
+                <script>--deleteLine()
+--echo(&quot;\n#K%&quot;..matches[2]..matches[3]..matches[4]..string.sub(matches[5],1,tonumber(matches[3])-3)..&quot;\n&quot;)
+local iter=0
+local mLen
+local mCode
+for i,v in pairs(matches) do
+	if iter==2 then
+		mLen=tonumber(v)
+	elseif iter==3 then
+		mCode=v
+		local mLine = getCurrentLine()
+		local mStart = string.find(mLine,&quot;#K%%&quot;)
+		local entry = string.sub(mLine,mStart,mStart+mLen+10)
+		mip:processMIP(entry,mCode)
+		selectString(entry,1)
+		replace(&quot;&quot;)
+	end
+	if iter==3 then
+		iter=0
+	else
+		iter=iter+1
+	end
+end
+if getCurrentLine() == &quot;&quot; then
+	deleteLine()
+end
+if (doPrompt) then
+	doPrompt()
+end</script>
+                <triggerType>0</triggerType>
+                <conditonLineDelta>0</conditonLineDelta>
+                <mStayOpen>0</mStayOpen>
+                <mCommand></mCommand>
+                <packageName></packageName>
+                <mFgColor>#ff0000</mFgColor>
+                <mBgColor>#ffff00</mBgColor>
+                <mSoundFile></mSoundFile>
+                <colorTriggerFgColor>#000000</colorTriggerFgColor>
+                <colorTriggerBgColor>#000000</colorTriggerBgColor>
+                <regexCodeList>
+                    <string>#K%([0-9]{5,5})([0-9]{3,3})([A-Z]{3,3})</string>
+                </regexCodeList>
+                <regexCodePropertyList>
+                    <integer>1</integer>
+                </regexCodePropertyList>
+            </Trigger>
+            <Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+                <name>startup</name>
+                <script>expandAlias(&quot;startMIP&quot;)
+disableTrigger(&quot;startup&quot;)</script>
+                <triggerType>0</triggerType>
+                <conditonLineDelta>0</conditonLineDelta>
+                <mStayOpen>0</mStayOpen>
+                <mCommand></mCommand>
+                <packageName></packageName>
+                <mFgColor>#ff0000</mFgColor>
+                <mBgColor>#ffff00</mBgColor>
+                <mSoundFile></mSoundFile>
+                <colorTriggerFgColor>#000000</colorTriggerFgColor>
+                <colorTriggerBgColor>#000000</colorTriggerBgColor>
+                <regexCodeList>
+                    <string>3Scapes welcomes you!</string>
+                    <string>3Scapes welcomes you back from linkdeath.</string>
+                </regexCodeList>
+                <regexCodePropertyList>
+                    <integer>0</integer>
+                    <integer>0</integer>
+                </regexCodePropertyList>
+            </Trigger>
+        </TriggerGroup>
+    </TriggerPackage>
+    <TimerPackage/>
+    <AliasPackage>
+        <AliasGroup isActive="yes" isFolder="yes">
+            <name>MIP</name>
+            <script></script>
+            <command></command>
+            <packageName></packageName>
+            <regex></regex>
+            <Alias isActive="yes" isFolder="no">
+                <name>start mip</name>
+                <script>require(&quot;math&quot;)
+local code = math.random(10000,30000)
+send(&quot;3klient &quot;..code..&quot;~mudlet&quot;)</script>
+                <command></command>
+                <packageName></packageName>
+                <regex>^startMIP$</regex>
+            </Alias>
+        </AliasGroup>
+    </AliasPackage>
+    <ActionPackage/>
+    <ScriptPackage>
+        <ScriptGroup isActive="yes" isFolder="yes">
+            <name>MIP</name>
+            <packageName></packageName>
+            <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+</script>
+            <eventHandlerList/>
+            <Script isActive="yes" isFolder="no">
+                <name>User Customizations</name>
+                <packageName></packageName>
+                <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+if not mip then
+	mip = {}
+end
+if (getModulePath and getModulePath(&quot;MIP&quot;)) then
+	mip.basedir = getModulePath(&quot;MIP&quot;)
+else
+	mip.basedir = &quot;C:/3K-Scripts&quot;
+end</script>
+                <eventHandlerList/>
+            </Script>
+            <Script isActive="yes" isFolder="no">
+                <name>MIP</name>
+                <packageName></packageName>
+                <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+--local a = &quot;#K%10401051BADUnder the eastern gates of Westersea (n,s,w,out)#K%10401051BADUnder the eastern gates of Westersea (n,s,w,out)#K%10401051BADUnder the eastern gates of Westersea (n,s,w,out)#K%10401051BADUnder the eastern gates of Westersea (n,s,w,out)&quot;
+if not mip then
+	mip = {}
+end
+function mip:captureMIP(a)
+	if (a:find(&quot;#K%%%d%d%d%d%d%d%d%d&quot;)) then
+		local pos = a:find(&quot;#K%%&quot;)
+		a = string.sub(a,pos+3)
+		pos = a:find(&quot;%d%d%d%d%d&quot;)
+		local secCode = string.sub(a,pos,pos+4)
+		a = string.sub(a,pos+5)
+		pos = a:find(&quot;%d%d%d&quot;)
+		local lineLength = tonumber(string.sub(a,pos,pos+2))
+		a = string.sub(a,pos+3)
+		pos = a:find(&quot;%a%a%a&quot;)
+		local mipCode = string.sub(a,pos,pos+2)
+		local mipLine = string.sub(a,pos+3,lineLength)
+		a = string.sub(a,lineLength+1)
+		mip:processMIP(mipCode,mipLine)
+		return a
+	else
+		return nil
+	end
+end
+
+function mip:processMIP(entry, code)
+	if (code == &quot;FFF&quot;) then
+		mip:processHpBar(entry)
+	elseif (code == &quot;CAA&quot;) then
+		mip:chatReceived(entry)
+	elseif (code == &quot;BAB&quot;) then
+		mip:tellReceived(entry)
+	else
+	end
+end
+
+function mip:tellReceived(entry)
+	entry = string.split(entry,&quot;~&quot;)
+	if (string.find(entry[1],&quot;BABx&quot;) == nil) then
+		mip.chatwindow:cecho(&quot;&lt;cyan&gt;&quot;..entry[2]..&quot;&lt;reset&gt;:&lt;white&gt;&quot;..entry[3]..&quot;&lt;reset&gt;\n&quot;)
+	else
+		mip.chatwindow:cecho(&quot;&lt;cyan&gt;To &quot;..entry[2]..&quot;&lt;reset&gt;:&lt;white&gt;&quot;..entry[3]..&quot;&lt;reset&gt;\n&quot;)
+	end
+end
+
+function mip:chatReceived(entry)
+	entry = string.split(entry,&quot;~&quot;)
+	mip.chatwindow:echo(entry[4]..&quot;\n&quot;)
+end
+
+function mip:processHpBar(entry)
+	local code, value
+	entry = string.sub(entry,15,-1)
+	for i,v in pairs(string.split(entry,&quot;~&quot;)) do
+		if i%2 == 0 then
+			if (code == &quot;A&quot;) then
+				mip.hpcur=tonumber(v)
+			elseif (code == &quot;B&quot;) then
+				mip.hpmax=tonumber(v)
+			elseif (code == &quot;C&quot;) then
+				mip.spcur = tonumber(v)
+			elseif (code == &quot;D&quot;) then
+				mip.spmax = tonumber(v)
+			elseif (code == &quot;E&quot;) then
+				mip.gp1 = tonumber(v)
+			elseif (code == &quot;F&quot;) then
+				mip.gp1max = tonumber(v)
+			elseif (code == &quot;G&quot;) then
+				mip.gp2 = tonumber(v)
+			elseif (code == &quot;H&quot;) then
+				mip.gp2max = tonumber(v)
+			elseif (code == &quot;I&quot;) then
+				mip.gline1 = v
+			elseif (code == &quot;J&quot;) then
+				mip.gline2 = v
+			elseif (code == &quot;K&quot;) then
+				mip.enemy = v
+			elseif (code == &quot;L&quot;) then
+				mip.enemyhealth = tonumber(v)
+			else
+				echo(code..&quot;,&quot;..v..&quot;\n&quot;)
+			end
+--G = reset
+		else
+			code=v
+		end
+	end
+	mip:updateHpbar()
+end</script>
+                <eventHandlerList/>
+            </Script>
+            <Script isActive="yes" isFolder="no">
+                <name>Gauges</name>
+                <packageName></packageName>
+                <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+
+function replaceColor(color, value)
+	if mip.colorMap[color] then
+		color = mip.colorMap[color]
+	else
+		return color..&quot;-&quot;..value
+	end
+	--	return color..&quot;-&quot;..value
+	return &quot;&lt;&quot;..color..&quot;&gt;&quot;..value..&quot;&lt;reset&gt;&quot;
+end
+
+function mip:doColor(gline)
+--	display(string.gsub(gline,&quot;&lt;(.)([^&gt;]+)&gt;&quot;, replaceColor))
+	return string.gsub(gline,&quot;&lt;(.)([^&gt;]+)&gt;&quot;, replaceColor)
+end
+
+function mip:updateHpbar()
+	if (mip.hpmax and mip.hpcur) then
+--		mip.hpguage:echo(mip.hpcur)
+		if (mip.hpcur &gt; mip.hpmax) then
+			mip.hpgauge:setValue(mip.hpcur%mip.hpmax,mip.hpmax,&quot;&lt;center&gt;&quot;..mip.hpcur..&quot;&lt;/center&gt;&quot;)
+		else
+			mip.hpgauge:setValue(mip.hpcur,mip.hpmax,&quot;&lt;center&gt;&quot;..mip.hpcur..&quot;&lt;/center&gt;&quot;)
+		end
+	end
+	if (mip.spcur and mip.spmax) then
+		if (mip.spcur &gt; mip.spmax) then
+			mip.spgauge:setValue(mip.spcur%mip.spmax,mip.spmax,&quot;&lt;center&gt;&quot;..mip.spcur..&quot;&lt;/center&gt;&quot;)
+		else
+			mip.spgauge:setValue(mip.spcur,mip.spmax,&quot;&lt;center&gt;&quot;..mip.spcur..&quot;&lt;/center&gt;&quot;)
+		end
+	end
+	if (mip.gp1) then
+		if mip.gp1max then
+			mip.gp1gauge:setValue(mip.gp1, mip.gp1max,&quot;&lt;center&gt;&quot;..tostring(mip.gp1)..&quot;&lt;/center&gt;&quot;)
+		else
+			mip.gp1gauge:setValue(mip.gp1, 100,&quot;&lt;center&gt;&quot;..tostring(mip.gp1)..&quot;&lt;/center&gt;&quot;)
+		end
+	end
+	if (mip.gp2) then
+		if mip.gp2max then
+			mip.gp2gauge:setValue(mip.gp2, mip.gp2max,&quot;&lt;center&gt;&quot;..tostring(mip.gp2)..&quot;&lt;/center&gt;&quot;)
+		else
+			mip.gp2gauge:setValue(mip.gp2, 100,&quot;&lt;center&gt;&quot;..tostring(mip.gp2)..&quot;&lt;/center&gt;&quot;)
+		end
+	end
+	if (mip.gline1 or mip.glone2) then	
+		clearWindow(&quot;gline1con&quot;)
+		if (mip.gline1) then
+			local gstr = mip:doColor(mip.gline1)
+			mip.glineinfo:cecho(gstr..&quot; | &quot;)--string.sub(gstr,1,string.len(gstr)))
+		end
+		if (mip.gline2) then	
+			local gstr = mip:doColor(mip.gline2)
+			mip.glineinfo:cecho(gstr)--string.sub(gstr,1,string.len(gstr)))
+		end
+	end
+	if (mip.enemy and mip.enemyhealth) then
+		if (mip.enemyhealth &gt; 100) then
+			mip.enemygauge:setValue(mip.enemyhealth%100, 100, &quot;&lt;center&gt;&quot;..mip.enemy..&quot;&lt;/center&gt;&quot;)
+		else
+			mip.enemygauge:setValue(mip.enemyhealth, 100, &quot;&lt;center&gt;&quot;..mip.enemy..&quot;&lt;/center&gt;&quot;)
+		end
+	end
+end
+
+function resetSize()
+local w,h = getMainWindowSize()
+if not mip then
+	mip = {}
+end
+mip.gauges = Geyser.Container:new({
+	name=&quot;gaugecontainer&quot;,
+	x=0,
+	y=h-25*8,
+	width=200,
+	height=25*8
+})
+mip.hpgauge = Geyser.Gauge:new({name=&quot;hpbar&quot;, x=&quot;10%&quot;,width=&quot;90%&quot;, height=&quot;15%&quot;},mip.gauges)
+mip.hpgauge.front:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #98f041, stop: 0.1 #8cf029, stop: 0.49 #66cc00, stop: 0.5 #52a300, stop: 1 #66cc00);
+    border-top: 1px black solid;
+    border-left: 1px black solid;
+    border-bottom: 1px black solid;
+    border-radius: 7;
+    padding: 3px;
+]])
+mip.hpgauge.back:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #78bd33, stop: 0.1 #6ebd20, stop: 0.49 #4c9900, stop: 0.5 #387000, stop: 1 #4c9900);
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 7;
+    padding: 3px;
+]])
+mip.hpimage = Geyser.Label:new({
+  name = &quot;hpimage&quot;,
+	x=0,
+  width = &quot;10%&quot;, height = &quot;15%&quot;
+},mip.gauges)
+mip.hpimage:setStyleSheet(string.format([[border-image: url(&quot;%s/Health.png&quot;);]],mip.basedir))
+mip.spgauge = Geyser.Gauge:new({name=&quot;spbar&quot;, x=&quot;10%&quot;,y=&quot;20%&quot;,width=&quot;90%&quot;, height=&quot;15%&quot;},mip.gauges)
+mip.spgauge.front:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #00A5E5, stop: 0.1 #017BDB, stop: 0.49 #0252D2, stop: 0.5 #0329C8, stop: 1 #0500BF);
+    border-top: 1px black solid;
+    border-left: 1px black solid;
+    border-bottom: 1px black solid;
+    border-radius: 7;
+    padding: 3px;
+]])
+mip.spgauge.back:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #00DBE5, stop: 0.1 #00B9DB, stop: 0.49 #0098D2, stop: 0.5 #0076C8, stop: 1 #0055BF);
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 7;
+    padding: 3px;
+]])
+mip.spimage = Geyser.Label:new({
+  name = &quot;spimage&quot;,
+	x=0,y=&quot;20%&quot;,
+  width = &quot;10%&quot;, height = &quot;15%&quot;
+},mip.gauges)
+mip.spimage:setStyleSheet(string.format([[border-image: url(&quot;%s/Sp.png&quot;);]],mip.basedir))
+mip.gp1gauge = Geyser.Gauge:new({name=&quot;gp1bar&quot;, x=&quot;10%&quot;,y=&quot;35%&quot;,width=&quot;90%&quot;, height=&quot;15%&quot;},mip.gauges)
+mip.gp1gauge.front:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #98f041, stop: 0.1 #8cf029, stop: 0.49 #66cc00, stop: 0.5 #52a300, stop: 1 #66cc00);
+    border-top: 1px black solid;
+    border-left: 1px black solid;
+    border-bottom: 1px black solid;
+    border-radius: 7;
+    padding: 3px;
+]])
+mip.gp1gauge.back:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #78bd33, stop: 0.1 #6ebd20, stop: 0.49 #4c9900, stop: 0.5 #387000, stop: 1 #4c9900);
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 7;
+    padding: 3px;
+]])
+mip.gp1image = Geyser.Label:new({
+  name = &quot;gp1image&quot;,
+	x=0,y=&quot;35%&quot;,
+  width = &quot;10%&quot;, height = &quot;15%&quot;
+},mip.gauges)
+mip.gp1image:setStyleSheet(string.format([[border-image: url(&quot;%s/gp1.png&quot;);]],mip.basedir))
+mip.gp2gauge = Geyser.Gauge:new({name=&quot;gp2bar&quot;, x=&quot;10%&quot;,y=&quot;50%&quot;,width=&quot;90%&quot;, height=&quot;15%&quot;},mip.gauges)
+mip.gp2gauge.front:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #E50097, stop: 0.1 #DB007D, stop: 0.49 #D20063, stop: 0.5 #C80049, stop: 1 #BF002F);
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 7;
+    padding: 3px;]])
+mip.gp2gauge.back:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #E500E0, stop: 0.1 #DB00BC, stop: 0.49 #D20099, stop: 0.5 #C80076, stop: 1 #BF0053);
+    border-top: 1px black solid;
+    border-left: 1px black solid;
+    border-bottom: 1px black solid;
+    border-radius: 7;
+    padding: 3px;]])
+mip.gp2image = Geyser.Label:new({
+  name = &quot;gp2image&quot;,
+	x=0,y=&quot;50%&quot;,
+  width = &quot;10%&quot;, height = &quot;15%&quot;
+},mip.gauges)
+mip.gp2image:setStyleSheet(string.format([[border-image: url(&quot;%s/gp2.png&quot;);]],mip.basedir))
+mip.enemygauge = Geyser.Gauge:new({name=&quot;enemybar&quot;, x=&quot;10%&quot;,y=&quot;65%&quot;,width=&quot;90%&quot;, height=&quot;15%&quot;},mip.gauges)
+mip.enemygauge.front:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f04141, stop: 0.1 #ef2929, stop: 0.49 #cc0000, stop: 0.5 #a40000, stop: 1 #cc0000);
+    border-top: 1px black solid;
+    border-left: 1px black solid;
+    border-bottom: 1px black solid;
+    border-radius: 7;
+    padding: 3px;]])
+mip.enemygauge.back:setStyleSheet([[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #bd3333, stop: 0.1 #bd2020, stop: 0.49 #990000, stop: 0.5 #700000, stop: 1 #990000);
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 7;
+    padding: 3px;]])
+mip.enemyimage = Geyser.Label:new({
+  name = &quot;enemyimage&quot;,
+	x=0,y=&quot;65%&quot;,
+  width = &quot;10%&quot;, height = &quot;15%&quot;
+},mip.gauges)
+mip.enemyimage:setStyleSheet(string.format([[border-image: url(&quot;%s/Enemy.png&quot;);]],mip.basedir))
+mip.glineinfo = Geyser.MiniConsole:new({
+      name=&quot;gline1con&quot;,
+		x=0,
+		y=h-25,
+		width=w,
+		height=25,
+    })
+mip.glineinfo:setColor(&quot;black&quot;)
+mip.colorMap = {r=&quot;red&quot;, y=&quot;yellow&quot;, g=&quot;green&quot;, c=&quot;cyan&quot;, v=&quot;violet&quot;}
+mip:updateHpbar()
+end
+registerAnonymousEventHandler(&quot;sysWindowResizeEvent&quot;, &quot;resetSize&quot;)
+resetSize()</script>
+                <eventHandlerList>
+                    <string>sysWindowResizeEvent</string>
+                </eventHandlerList>
+            </Script>
+            <Script isActive="yes" isFolder="no">
+                <name>Chat Monitor</name>
+                <packageName></packageName>
+                <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+local w,h = getMainWindowSize()
+mip.chatwindow = Geyser.MiniConsole:new({
+      name=&quot;mipchatwindow&quot;,
+		x=0,
+		y=h-25*20,
+		width=200,
+		height=200,
+    })
+setWindowWrap(&quot;mipchatwindow&quot;, 25)</script>
+                <eventHandlerList/>
+            </Script>
+            <Script isActive="yes" isFolder="no">
+                <name>startup</name>
+                <packageName></packageName>
+                <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+registerAnonymousEventHandler(&quot;sysConnectionEvent&quot;,&quot;mipStartup&quot;)
+function mipStartup()
+	enableTrigger(&quot;startup&quot;)
+end</script>
+                <eventHandlerList>
+                    <string>sysConnectionEvent</string>
+                </eventHandlerList>
+            </Script>
+        </ScriptGroup>
+    </ScriptPackage>
+    <KeyPackage/>
+    <HelpPackage>
+        <helpURL></helpURL>
+    </HelpPackage>
+</MudletPackage>
