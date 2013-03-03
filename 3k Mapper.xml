@@ -110,7 +110,16 @@ setTriggerStayOpen(&quot;roomdescription&quot;, 1)</script>
                     </Trigger>
                     <Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="yes" isColorTriggerFg="yes" isColorTriggerBg="yes">
                         <name>roomname</name>
-                        <script>local match = matches[2]
+                        <script>-- Speedwalk tracking extension
+if countRooms and countRooms &gt; 1 then
+	countRooms = countRooms-1
+	daagar.log:debug(&quot;We're speedwalking! Left to go: &quot;..countRooms)
+elseif countRooms == 1 then
+	countRooms = nil
+	raiseEvent(&quot;speedwalk_complete&quot;)	
+end
+
+local match = matches[2]
 tmap.compassSpace = string.len(matches[2])
 tmap.roomname = string.trim(matches[2])
 tmap.roomdesc = &quot;&quot;
@@ -1557,6 +1566,11 @@ end</script>
   if #speedWalkPath == 0 then
     tmap:echo(&quot;Couldn't find a path to the destination :(&quot;)
   end
+
+  -- Extension for speedwalk tracking
+  countRooms = #speedWalkPath
+  daagar.log:debug(&quot;countRooms: &quot;..countRooms)
+
   for i = 1, #speedWalkPath do
     speedWalkPath[i] = tonumber(speedWalkPath[i])
   end
